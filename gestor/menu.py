@@ -7,6 +7,7 @@ import manager
 class Menu(manager.Manager):
 
     def __init__(self):
+        super().__init__()
         while True:
 
             helpers.clear()

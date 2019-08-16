@@ -1,25 +1,18 @@
 import re
 import helpers
+from os import remove
+from os.path import join
 
-
-class Cliente:
-
-    nombre: str
-    apellidos: str
-    dni: str
-
-    def __init__(self, nombre: str, apellidos: str, dni: str):
-        self.nombre = nombre
-        self.apellidos = apellidos
-        self.dni = dni
-
-    def __str__(self):
-        return f"{self.dni}: {self.nombre} {self.apellidos}"
-
+from gestor_ficheros import GestorFicheros
+from config import Cliente, DataPath
 
 class Manager:
 
     __clientes: list = []
+
+    def __init__(self):
+        self.__clientes = GestorFicheros.loadClient()
+        print(self.__clientes)
 
     @staticmethod
     def show_client(client: Cliente):
@@ -45,24 +38,14 @@ class Manager:
             print("Introduce DNI (2 números y 1 carácter en mayúscula)")
             dni = helpers.input_text(3, 3)
             if self.is_valid(dni):
+                GestorFicheros.writeCliente(dni, nombre, apellidos)
                 self.__clientes.append(Cliente(nombre, apellidos, dni))
                 break
             else:
                 print("DNI incorrecto o en uso")
-                dni = None
-
-            
+                dni = None            
 
     def is_valid(self, dni: str):
-        """
-        Hace diferentes validaciones en el campo dni
-            >>> is_valid('48H')  # No válido, en uso
-        False
-            >>> is_valid('X82')  # No válido, incorrecto
-        False
-            >>> is_valid('21A')  # Válido
-        True
-        """
         if not re.match('[0-9]{2}[A-Z]', dni):
             return False
 
@@ -89,6 +72,7 @@ class Manager:
 
         if client:
             client = self.__clientes.pop(i)
+            remove(join(DataPath, '{}.json'.format(client.dni)))
             return True
 
         return False
@@ -100,9 +84,13 @@ class Manager:
         if client:
     
             print(f"Introduce nuevo nombre ({client.nombre})")
-            self.__clientes[i].nombre = helpers.input_text(2, 30)
-    
+            nombre = helpers.input_text(2, 30)
+            self.__clientes[i].nombre = nombre
+
             print(f"Introduce nuevo apellido ({client.apellidos})")
-            self.__clientes[i].apellidos = helpers.input_text(2, 30)
-    
+            apellidos = helpers.input_text(2, 30)
+            self.__clientes[i].apellidos = apellidos
+
+            GestorFicheros.writeCliente(client.dni, nombre, apellidos)
+
             return True
