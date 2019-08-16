@@ -1,17 +1,16 @@
 """ Menú del programa """
 
-from manager import Manager
 import helpers
+import manager
 
 
-class Menu:
+class Menu(manager.Manager):
 
-    @staticmethod
-    def loop():
+    def __init__(self):
         while True:
 
             helpers.clear()
-
+    
             print("========================")
             print("  BIENVENIDO AL GESTOR  ")
             print("========================")
@@ -22,31 +21,34 @@ class Menu:
             print("[5] Borrar cliente      ")
             print("[6] Salir               ")
             print("========================")
-
+    
             option = input("> ")
-
+    
             helpers.clear()
-
+    
             if option == '1':
                 print("Listando los clientes...\n")
-                Manager.show_clients()
+                self.show_clients()
             if option == '2':
                 print("Mostrando un cliente...\n")
-                Manager.find()
+                self.find()
             if option == '3':
                 print("Añadiendo un cliente...\n")
-                Manager.add()
+                self.add()
                 print("Cliente añadido correctamente\n")
             if option == '4':
                 print("Modificando un cliente...\n")
-                if Manager.edit():
+                if self.edit():
                     print("Cliente modificado correctamente\n")
             if option == '5':
                 print("Borrando un cliente...\n")
-                if Manager.delete():
+                if self.delete():
                     print("Cliente borrado correctamente\n")
             if option == '6':
                 print("Saliendo...\n")
                 break
-
+    
             input("\nPresiona ENTER para continuar...")
+
+
+menu = Menu()

@@ -1,5 +1,3 @@
-""" Funciones de ayuda """
-
 import os
 import platform
 
